@@ -10,7 +10,12 @@ import (
 
 // Create our handler functions
 func (app *application) Greeting(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Welcome to my webpage"))
+	// w.Write([]byte("Welcome to my webpage"))
+	question, err := app.question.Get()
+	if err != nil {
+		return
+	}
+	w.Write([]byte(question.Body))
 }
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {

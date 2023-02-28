@@ -15,24 +15,32 @@ import (
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/ub2013210024/hello/internal/models"
 )
 
 // Crate a new type
-type application struct{}
+type application struct {
+	question models.QuestionModel
+}
 
 func main() {
 	// Create a flag for specifying the port number for when starting the server
 	addr := flag.String("port", ":4000", "HTTP network address")
 	dsn := flag.String("dsn", os.Getenv("LEMON_DB_DSN"), "PostgreSQL dsn")
 	flag.Parse()
-	// Create an instance of the application type
-	app := &application{}
+
 	// Create an instance of the connection pool
 	db, err := openDB(*dsn)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
+	// Create an instance of the application type
+	app := &application{
+		question: models.QuestionModel{DB: db},
+	}
+
 	defer db.Close()
 	log.Println("database connection pool established")
 
